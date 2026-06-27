@@ -10,7 +10,7 @@ def home():
     return "OK"
 
 def run():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
 
 api_id = int(os.environ["api_id"])
 api_hash = os.environ["api_hash"]
