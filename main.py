@@ -1,5 +1,16 @@
-import os
+from flask import Flask
+import threading
 from telethon import TelegramClient, events
+import os
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "OK"
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
 api_id = int(os.environ["api_id"])
 api_hash = os.environ["api_hash"]
@@ -9,18 +20,12 @@ client = TelegramClient(string_session, api_id, api_hash)
 
 @client.on(events.NewMessage)
 async def handler(event):
-    text = event.raw_text
-
-    if text == ".سلام":
+    if event.raw_text == ".سلام":
         await event.reply("سلام 👋")
 
-    if text == ".ping":
-        await event.reply("pong 🏓")
+def main():
+    threading.Thread(target=run).start()
+    client.start()
+    client.run_until_disconnected()
 
-    if text == ".id":
-        await event.reply(str(event.chat_id))
-
-
-print("Userbot running...")
-client.start()
-client.run_until_disconnected()
+main()
