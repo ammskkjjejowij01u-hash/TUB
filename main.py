@@ -1,6 +1,4 @@
 from telethon import TelegramClient, events
-from flask import Flask
-import threading
 
 api_id = 33765228
 api_hash = "d2767c387914ee3b344f2c1367e69a1f"
@@ -8,21 +6,6 @@ string_session = "1BJWap1sBu199Ig5LND4HD5rCrLWoq8j3KSNfLa2WnuO4yLU7gx6RvjwBb_6a3
 
 client = TelegramClient(string_session, api_id, api_hash)
 
-# ---------------- Flask fake server ----------------
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Userbot is alive"
-
-@app.route("/health")
-def health():
-    return {"status": "ok"}
-
-def run_flask():
-    app.run(host="0.0.0.0", port=8080)
-
-# ---------------- Telegram userbot ----------------
 @client.on(events.NewMessage)
 async def handler(event):
     text = event.raw_text
@@ -30,13 +13,18 @@ async def handler(event):
     if text == ".سلام":
         await event.reply("سلام 👋")
 
-# ---------------- Start ----------------
-def main():
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.start()
+    if text == ".ping":
+        await event.reply("pong 🏓")
 
+    if text == ".id":
+        await event.reply(str(event.chat_id))
+
+    if text == ".help":
+        await event.reply("commands: .سلام .ping .id")
+
+def main():
+    print("Userbot running...")
     client.start()
-    print("Userbot is running...")
     client.run_until_disconnected()
 
 if __name__ == "__main__":
